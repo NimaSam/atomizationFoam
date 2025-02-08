@@ -204,6 +204,9 @@ int main(int argc, char *argv[])
             }
         }
 
+        //update the refine region
+        refinementRegion = alpha1*markedCells;
+
         runTime.write();
 
         runTime.printExecutionTime(Info);

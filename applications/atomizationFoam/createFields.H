@@ -142,3 +142,34 @@ phaseCoupling coupling
     alpha1,
     cloud
 );
+
+
+Info<< "Reading refinementRegion\n" << endl;
+volScalarField markedCells
+(
+    IOobject
+    (
+        "markedCells",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("markedCells",dimless, 1.0)
+);
+
+
+volScalarField refinementRegion
+(
+    IOobject
+    (
+        "refinementRegion",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+   alpha1*markedCells
+);
+
