@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultFieldValues
+(
+    volScalarFieldValue markedCells 0
+);
+
+regions
+(
+
+// Cells within this box will be marked for refinement by setting 'markedCells' to 1  
+// define the box the way which consider you refine region
+    boxToCell
+    {
+        box (0 -100 -100) (0.15 100 100);
+
+        fieldValues
+        (
+            volScalarFieldValue markedCells 1
+        );
+    }
+);
+
+// ************************************************************************* //
