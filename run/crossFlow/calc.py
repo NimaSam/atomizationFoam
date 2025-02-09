@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-#path to data file
+# Path to data file
 path = "postProcessing/dropletCloud/0/fz1_cloudData.dat"
 
 # Read the data file
@@ -46,19 +46,34 @@ def compute_smd_and_histogram(data_subset):
 # Process each unique time step
 unique_times = np.sort(df['time'].unique())
 
-# Store SMD results
+# Store SMD and particle count results
 smd_results = []
+particle_counts = []
 all_hist_counts = np.zeros(len(bins) - 1)
 
+total_particles = 0
 for t in unique_times:
     subset = df[df['time'] == t]
     smd, hist_counts = compute_smd_and_histogram(subset)
     smd_results.append({'time': t, 'smd': smd})
     all_hist_counts += hist_counts
 
+    # Count total particles at this time step
+    total_particles_at_t = subset['nParticle'].sum()
+    particle_counts.append({'time': t, 'total_particles': total_particles_at_t})
+    total_particles += total_particles_at_t
+
 # Save SMD to CSV
 smd_df = pd.DataFrame(smd_results)
 smd_df.to_csv('smd_results.csv', index=False)
+
+# Save particle counts to CSV
+particle_counts_df = pd.DataFrame(particle_counts)
+particle_counts_df.to_csv('particle_counts.csv', index=False)
+
+# Save total particle count across all time steps
+with open('total_particles.txt', 'w') as f:
+    f.write(f'Total particles across all time steps: {total_particles}\n')
 
 # Plot SMD vs Time
 plt.figure(figsize=(10, 5))
@@ -68,7 +83,7 @@ plt.ylabel('Sauter Mean Diameter (microns)')
 plt.title('SMD vs Time')
 plt.grid()
 plt.savefig('smd_vs_time.png')
-plt.show()
+#plt.show()
 
 # Plot Histogram
 bin_labels = [f'{int(bins[i])}-{int(bins[i+1])} μm' for i in range(len(bins)-1)]
@@ -79,5 +94,5 @@ plt.ylabel('Particle Count')
 plt.title('Particle Distribution Across Diameter Bins')
 plt.grid(axis='y')
 plt.savefig('particle_histogram.png')
-plt.show()
+#plt.show()
 
